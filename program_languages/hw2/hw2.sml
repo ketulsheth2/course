@@ -13,22 +13,24 @@ where lst is identical to the argument list except the string is not in it.
  You may assume the string is in the list at most once. Use same_string, 
 provided to you,to compare strings. Sample solution is around 8 lines.*)
 (* val all_except_option = fn : string * string list -> string list option *)
-fun all_excep_option(str : string, str_lst : string list) = 
-    case str_lst of
+fun all_excep_option(opt, all) = 
+    case all of
 	[] => NONE
-      | str_head::str_tail  => if same_string(str, str_head)
-			       then SOME str_tail
-			       else case all_excep_option(str, str_tail) of
+      | first::rest => if same_string(opt, first)
+			       then SOME rest
+			       else case all_excep_option(opt, rest) of
 					NONE => NONE
-				      | SOME strx => SOME (str_head::strx) 
+				      | SOME aeo => SOME (first::aeo) 
 
 (* b *)
-fun get_substitutions1(ssl, s) =
-    case ssl of
+fun get_substitutions1(subs, opt) =
+    case subs of
 	[] => []
-     |  slist::ssl2 => case all_excep_option(s, slist) of
-			   NONE => (get_substitutions1(ssl2, s))
-			 | SOME listx =>  listx@(get_substitutions1(ssl2, s))
+     |  first::subs_rest => case all_excep_option(opt, first) of
+			   NONE => (get_substitutions1(subs_rest, opt))
+			 | SOME aeo =>  aeo@(get_substitutions1(subs_rest, opt))
+
+(* c *)
 
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
