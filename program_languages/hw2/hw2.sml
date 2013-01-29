@@ -31,7 +31,17 @@ fun get_substitutions1(subs, opt) =
 			 | SOME aeo =>  aeo@(get_substitutions1(subs_rest, opt))
 
 (* c *)
-
+fun get_substitutions2(subs, opt) =
+    let 
+	fun get_sub(got, subs_rest) =
+	    case subs_rest of
+		[] => got
+	     |  first::subs_rest => case all_excep_option(opt, first) of
+					NONE => get_sub(got, subs_rest)
+				      | SOME aeo =>  get_sub(got@aeo, subs_rest)	    
+    in
+	get_sub([], subs)
+    end
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
 datatype suit = Clubs | Diamonds | Hearts | Spades
