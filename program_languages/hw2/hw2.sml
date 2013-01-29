@@ -22,21 +22,14 @@ fun all_excep_option(str : string, str_lst : string list) =
 					NONE => NONE
 				      | SOME strx => SOME (str_head::strx) 
 
-
-(*if same_string(str_head, str) 
-			       then SOME str_lst 
-			       else all_excep_option(str, str_tail)
-*)						    
+(* b *)
 fun get_substitutions1(ssl, s) =
     case ssl of
 	[] => []
      |  slist::ssl2 => case all_excep_option(s, slist) of
 			   NONE => (get_substitutions1(ssl2, s))
-			 | SOME (x::xs) =>  ((x::xs)@(get_substitutions1(ssl2, s)))
-(*case  all_excep_option(s, slist) of
-			   NONE => get_substitutions1(ssl2, s)
-				 |SOME x::xs => x::xs@get_substitutions1(ssl2, s)
-*)
+			 | SOME listx =>  listx@(get_substitutions1(ssl2, s))
+
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
 datatype suit = Clubs | Diamonds | Hearts | Spades
