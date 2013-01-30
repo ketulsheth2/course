@@ -7,12 +7,7 @@ fun same_string(s1 : string, s2 : string) =
     s1 = s2
 
 (* put your solutions for problem 1 here *)
-(* a. Write a function all_except_option, which takes a string and a string
- list. Return NONE if the string is not in the list, else return SOME lst 
-where lst is identical to the argument list except the string is not in it.
- You may assume the string is in the list at most once. Use same_string, 
-provided to you,to compare strings. Sample solution is around 8 lines.*)
-(* val all_except_option = fn : string * string list -> string list option *)
+(* a *)
 fun all_excep_option(opt, all) = 
     case all of
 	[] => NONE
@@ -65,5 +60,76 @@ datatype color = Red | Black
 datatype move = Discard of card | Draw 
 
 exception IllegalMove
-
+	      
 (* put your solutions for problem 2 here *)
+(* a *)
+fun card_color(xcard) =
+    case xcard of 
+	(Spades, x) => Black
+     |  (Clubs, x) => Black
+     |  (Hearts, x) => Red
+     |  (Diamonds, x) => Red
+									  
+(* b *)		      
+fun card_value(xcard)=
+    case xcard of
+	(x, Jack) => 10
+      | (x, Queen) => 10
+      | (x, King) => 10
+      | (x, Ace) => 11
+      | (x, Num i) => i
+
+(* c *)
+fun remove_card(cs, c, e)=
+    case cs of
+	[] => raise e
+     |  x::cs => if x = c then cs
+		 else x::remove_card(cs, c, e)
+(* d *)
+fun all_same_color(cs)=
+    case cs of
+	[] => true
+      | c1::cs1 => case cs1 of
+		      [] => true
+		    | c2::cs2 => card_color(c1) = card_color(c2) andalso all_same_color(cs1) 
+
+(* e *)
+fun sum_cards(cs)=
+    let
+	fun sum_cards_tail(sum, rest_cs)=
+	    case rest_cs of
+		[] => sum
+	      | c::rest_cs => sum_cards_tail(sum+card_value(c), rest_cs)
+    in
+	sum_cards_tail(0, cs)
+    end
+
+(* f *)
+fun score(cs, goal)=
+    let 
+	val sum = sum_cards(cs)
+	val score = if sum > goal then sum + sum + sum - goal
+		    else goal - sum
+    in
+	if all_same_color(cs) then score div 2
+	else score
+    end
+	
+(* g *)
+fun officiate(cs, ms, goal)=
+    let
+	val heldcards = []
+	fun play(hs, cs2, ms)=
+	    case ms of
+		[] => score(hs, goal)
+	      | Draw::ms => 
+		let 
+		in
+		    case cs2 of
+			[] => score(hs, goal)
+		      | c::cs2 => play(c::hs, cs2, ms)
+		end
+	      | Discard c::ms => play(remove_card(hs, c, IllegalMove), cs2,ms) 
+    in
+	play(heldcards, cs, ms)
+    end
