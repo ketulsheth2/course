@@ -42,6 +42,19 @@ fun get_substitutions2(subs, opt) =
     in
 	get_sub([], subs)
     end
+
+(* d *)
+fun similar_names(subs, fullname) = 
+    let 
+	fun othernames(candidate, mid, lst) =
+	    case candidate of
+		[] => []
+	      | fst::rst => [{first=fst, middle=mid, last=lst}]@othernames(rst, mid, lst)
+    in
+	case fullname of
+	    {first, middle, last} => [fullname]@othernames(get_substitutions1(subs, first), middle, last)
+    end						  
+
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
 datatype suit = Clubs | Diamonds | Hearts | Spades
