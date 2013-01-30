@@ -16,7 +16,6 @@ fun all_excep_option(opt, all) =
 			       else case all_excep_option(opt, rest) of
 					NONE => NONE
 				      | SOME aeo => SOME (first::aeo) 
-
 (* b *)
 fun get_substitutions1(subs, opt) =
     case subs of
@@ -24,7 +23,6 @@ fun get_substitutions1(subs, opt) =
      |  first::subs_rest => case all_excep_option(opt, first) of
 			   NONE => (get_substitutions1(subs_rest, opt))
 			 | SOME aeo =>  aeo@(get_substitutions1(subs_rest, opt))
-
 (* c *)
 fun get_substitutions2(subs, opt) =
     let 
@@ -37,7 +35,6 @@ fun get_substitutions2(subs, opt) =
     in
 	get_sub([], subs)
     end
-
 (* d *)
 fun similar_names(subs, fullname) = 
     let 
@@ -49,7 +46,6 @@ fun similar_names(subs, fullname) =
 	case fullname of
 	    {first, middle, last} => [fullname]@othernames(get_substitutions1(subs, first), middle, last)
     end						  
-
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
 datatype suit = Clubs | Diamonds | Hearts | Spades
@@ -69,7 +65,6 @@ fun card_color(xcard) =
      |  (Clubs, x) => Black
      |  (Hearts, x) => Red
      |  (Diamonds, x) => Red
-									  
 (* b *)		      
 fun card_value(xcard)=
     case xcard of
@@ -78,7 +73,6 @@ fun card_value(xcard)=
       | (x, King) => 10
       | (x, Ace) => 11
       | (x, Num i) => i
-
 (* c *)
 fun remove_card(cs, c, e)=
     case cs of
@@ -92,7 +86,6 @@ fun all_same_color(cs)=
       | c1::cs1 => case cs1 of
 		      [] => true
 		    | c2::cs2 => card_color(c1) = card_color(c2) andalso all_same_color(cs1) 
-
 (* e *)
 fun sum_cards(cs)=
     let
@@ -103,7 +96,6 @@ fun sum_cards(cs)=
     in
 	sum_cards_tail(0, cs)
     end
-
 (* f *)
 fun score(cs, goal)=
     let 
@@ -114,7 +106,6 @@ fun score(cs, goal)=
 	if all_same_color(cs) then score div 2
 	else score
     end
-	
 (* g *)
 fun officiate(cs, ms, goal)=
     let
