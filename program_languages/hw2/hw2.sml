@@ -8,19 +8,19 @@ fun same_string(s1 : string, s2 : string) =
 
 (* put your solutions for problem 1 here *)
 (* a *)
-fun all_excep_option(opt, all) = 
+fun all_except_option(opt, all) = 
     case all of
 	[] => NONE
       | first::rest => if same_string(opt, first)
 			       then SOME rest
-			       else case all_excep_option(opt, rest) of
+			       else case all_except_option(opt, rest) of
 					NONE => NONE
 				      | SOME aeo => SOME (first::aeo) 
 (* b *)
 fun get_substitutions1(subs, opt) =
     case subs of
 	[] => []
-     |  first::subs_rest => case all_excep_option(opt, first) of
+     |  first::subs_rest => case all_except_option(opt, first) of
 			   NONE => (get_substitutions1(subs_rest, opt))
 			 | SOME aeo =>  aeo@(get_substitutions1(subs_rest, opt))
 (* c *)
@@ -29,7 +29,7 @@ fun get_substitutions2(subs, opt) =
 	fun get_sub(got, subs_rest) =
 	    case subs_rest of
 		[] => got
-	     |  first::subs_rest => case all_excep_option(opt, first) of
+	     |  first::subs_rest => case all_except_option(opt, first) of
 					NONE => get_sub(got, subs_rest)
 				      | SOME aeo =>  get_sub(got@aeo, subs_rest)	    
     in
@@ -100,7 +100,7 @@ fun sum_cards(cs)=
 fun score(cs, goal)=
     let 
 	val sum = sum_cards(cs)
-	val score = if sum > goal then sum + sum + sum - goal
+	val score = if sum > goal then (sum - goal) + (sum - goal) + (sum - goal) (* what's the MUL operator? *)
 		    else goal - sum
     in
 	if all_same_color(cs) then score div 2
@@ -118,7 +118,8 @@ fun officiate(cs, ms, goal)=
 		in
 		    case cs2 of
 			[] => score(hs, goal)
-		      | c::cs2 => play(c::hs, cs2, ms)
+		      | c::cs2 => if sum_cards(c::hs) > goal then score(c::hs, goal)
+				  else play(c::hs, cs2, ms)
 		end
 	      | Discard c::ms => play(remove_card(hs, c, IllegalMove), cs2,ms) 
     in
